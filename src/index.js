@@ -1,12 +1,13 @@
-gsap.registerPlugin(ScrollTrigger, CustomEase)
+gsap.registerPlugin(ScrollTrigger, CustomEase);
 
-console.log("test")
+console.log("test");
 
 handleDropdownAnimation();
 imageScrollDelay();
-initHomeHeroSwiper()
-initDetectScrollingDirection()
-initReviewsSwiper()
+initHomeHeroSwiper();
+initDetectScrollingDirection();
+initReviewsSwiper();
+initFormFunction();
 
 // ------ BASE ------ //
 
@@ -14,7 +15,7 @@ initReviewsSwiper()
 const lenis = new Lenis();
 
 // Synchronize Lenis scrolling with GSAP's ScrollTrigger plugin
-lenis.on('scroll', ScrollTrigger.update);
+lenis.on("scroll", ScrollTrigger.update);
 
 // Add Lenis's requestAnimationFrame (raf) method to GSAP's ticker
 // This ensures Lenis's smooth scroll animation updates on each GSAP tick
@@ -36,8 +37,7 @@ gsap.defaults({
 
 function handleDropdownAnimation() {
   const dropdowns = $(".nav_menu-dropdown");
-  const breakpoint =
-    768; // Bepaal de schermgrootte waarop je wil schakelen tussen desktop/tablet en mobiel
+  const breakpoint = 768; // Bepaal de schermgrootte waarop je wil schakelen tussen desktop/tablet en mobiel
 
   if (window.innerWidth >= breakpoint) {
     // Desktop/Tablet logica (met gsap animaties)
@@ -53,15 +53,19 @@ function handleDropdownAnimation() {
       openTl
         .set(dropdown, { display: "flex" })
         .fromTo(
-          dropdown, { opacity: 0, y: "4rem" }, { opacity: 1, y: "2rem", duration: 0.3 },
+          dropdown,
+          { opacity: 0, y: "4rem" },
+          { opacity: 1, y: "2rem", duration: 0.3 },
           "<"
         )
         .fromTo(
-          dropdownLinks, { opacity: 0, y: "1rem" }, {
+          dropdownLinks,
+          { opacity: 0, y: "1rem" },
+          {
             opacity: 1,
             y: "0rem",
             duration: 0.3,
-            stagger: 0.08
+            stagger: 0.08,
           },
           "<"
         );
@@ -90,7 +94,7 @@ function handleDropdownAnimation() {
 
       // Klik event listener voor mobiel
       link.on("click", function (e) {
-        console.log("dropdown cliciked")
+        console.log("dropdown cliciked");
         dropdown.toggleClass("is-active");
       });
     });
@@ -113,15 +117,20 @@ function imageScrollDelay() {
         trigger: imageWrap[0], // Gebruik het DOM-element uit de jQuery-selectie
         scrub: true,
         pin: false,
+      },
+    });
+    tl.fromTo(
+      img,
+      {
+        // Gebruik het DOM-element uit de jQuery-selectie
+        yPercent: -10,
+        ease: "none",
+      },
+      {
+        yPercent: 10,
+        ease: "none",
       }
-    });
-    tl.fromTo(img, { // Gebruik het DOM-element uit de jQuery-selectie
-      yPercent: -10,
-      ease: 'none'
-    }, {
-      yPercent: 10,
-      ease: 'none'
-    });
+    );
   });
 }
 
@@ -129,35 +138,41 @@ function initDetectScrollingDirection() {
   let lastScrollTop = 0;
   const threshold = 10; // Minimale scrollafstand om richting te bepalen
   const thresholdTop = 50; // Afstand vanaf de top waarna we echt 'gestart' zijn
-  const navElem = document.querySelector('.nav_component');
+  const navElem = document.querySelector(".nav_component");
 
-  window.addEventListener('scroll', () => {
+  window.addEventListener("scroll", () => {
     const nowScrollTop = window.scrollY;
 
     // Pas logica alleen toe als er minstens 'threshold' px sinds de laatste check gescrold is
     if (Math.abs(lastScrollTop - nowScrollTop) >= threshold) {
-      const direction = nowScrollTop > lastScrollTop ? 'down' : 'up';
+      const direction = nowScrollTop > lastScrollTop ? "down" : "up";
       // Data-attributen voor debugging of styling (optioneel)
-      document.querySelectorAll('[data-scrolling-direction]')
-        .forEach(el => el.setAttribute('data-scrolling-direction', direction));
+      document
+        .querySelectorAll("[data-scrolling-direction]")
+        .forEach((el) =>
+          el.setAttribute("data-scrolling-direction", direction)
+        );
 
       // Heeft de gebruiker meer dan thresholdTop (50px) gescrold?
       const started = nowScrollTop > thresholdTop;
-      document.querySelectorAll('[data-scrolling-started]')
-        .forEach(el => el.setAttribute('data-scrolling-started', started ? 'true' : 'false'));
+      document
+        .querySelectorAll("[data-scrolling-started]")
+        .forEach((el) =>
+          el.setAttribute("data-scrolling-started", started ? "true" : "false")
+        );
 
       // --- DIRECT DE HOOGTE VAN NAV AANPASSEN ---
       if (!started) {
         // Nog geen 50px gescrold -> nav blijft hoog
-        navElem.style.height = '5rem';
+        navElem.style.height = "5rem";
       } else {
         // Wel > 50px gescrold
-        if (direction === 'down') {
+        if (direction === "down") {
           // Scrolt omlaag -> nav verkleinen naar 4rem
-          navElem.style.height = '3.5rem';
+          navElem.style.height = "3.5rem";
         } else {
           // Scrolt omhoog -> nav vergroten naar 6rem
-          navElem.style.height = '5rem';
+          navElem.style.height = "5rem";
         }
       }
       // ------------------------------------------
@@ -176,18 +191,18 @@ function initReviewsSwiper() {
       // when window width is >= 320px
       320: {
         slidesPerView: 1,
-        spaceBetween: 16
+        spaceBetween: 16,
       },
       // when window width is >= 480px
       480: {
         slidesPerView: 2,
-        spaceBetween: 16
+        spaceBetween: 16,
       },
       // when window width is >= 640px
       640: {
         slidesPerView: 2,
-        spaceBetween: 24
-      }
+        spaceBetween: 24,
+      },
     },
     pagination: {
       el: ".swiper-page",
@@ -198,13 +213,13 @@ function initReviewsSwiper() {
       prevEl: '[data-swiper-navigation="left"]',
       nextEl: '[data-swiper-navigation="right"]',
     },
-  })
+  });
 }
 // ------ HOME ------ //
 
 function initHomeHeroSwiper() {
-  const AUTOPLAY_DELAY = 5000
-  const SWIPER_SPEED = 400
+  const AUTOPLAY_DELAY = 5000;
+  const SWIPER_SPEED = 400;
 
   let homeHeroSwiper = new Swiper(".swiper.is-hero_bg", {
     direction: "horizontal",
@@ -214,14 +229,14 @@ function initHomeHeroSwiper() {
     autoplay: {
       delay: AUTOPLAY_DELAY,
     },
-  })
+  });
 }
 
-if (document.querySelector('.section_header30')) {
-  $('.section_header30').each(function (index) {
+if (document.querySelector(".section_header30")) {
+  $(".section_header30").each(function (index) {
     let triggerElement = $(this);
-    let targetElement = $(this).find('.header103_content-wrapper');
-    let imageElement = $(this).find(".swiper ")
+    let targetElement = $(this).find(".header103_content-wrapper");
+    let imageElement = $(this).find(".swiper ");
 
     let tl = gsap.timeline({
       scrollTrigger: {
@@ -229,8 +244,8 @@ if (document.querySelector('.section_header30')) {
         start: "0% 0%",
         end: "100% 0%",
         scrub: true, // Changed scrub to true for smooth scrubbing
-        markers: false
-      }
+        markers: false,
+      },
     });
 
     tl.to(targetElement, {
@@ -238,17 +253,21 @@ if (document.querySelector('.section_header30')) {
       yPercent: -50,
     });
 
-    tl.to(imageElement, {
-      ease: "none",
-      yPercent: 50,
-    }, "<");
+    tl.to(
+      imageElement,
+      {
+        ease: "none",
+        yPercent: 50,
+      },
+      "<"
+    );
   });
 }
 
 if (document.querySelector('[data-animate-scroll="wrapper"]')) {
   $('[data-animate-scroll="wrapper"]').each(function () {
     let triggerElement = $(this);
-    let targetElement = $(this).find('[data-animate-scroll="item"]')
+    let targetElement = $(this).find('[data-animate-scroll="item"]');
 
     let tl = gsap.timeline({
       scrollTrigger: {
@@ -256,7 +275,7 @@ if (document.querySelector('[data-animate-scroll="wrapper"]')) {
         start: "0% 85%",
         end: "100% 0%",
         toggleActions: "play none none none",
-      }
+      },
     });
 
     gsap.set(targetElement, {
@@ -271,7 +290,34 @@ if (document.querySelector('[data-animate-scroll="wrapper"]')) {
       stagger: 0.05,
       duration: 1,
       ease: "main",
-      clearProps: "all"
+      clearProps: "all",
+    });
+  });
+}
+
+function initFormFunction() {
+  console.log("form function test");
+
+  // Handle bottle size selection and minimum order quantities
+  const $bottleOptions = $('input[type="checkbox"][data-grootte]');
+  const $amountOptions = $("[data-amount]");
+
+  $bottleOptions.on("change", function () {
+    const selectedSize = $(this).data("grootte");
+
+    // Show/hide amount options based on bottle size
+    $amountOptions.each(function () {
+      const amount = $(this).data("amount");
+
+      if (selectedSize === "30" && amount === "360") {
+        $(this).hide();
+      } else if (selectedSize === "30" && amount === "320") {
+        $(this).show();
+      } else if (selectedSize === "100" && amount === "320") {
+        $(this).hide();
+      } else if (selectedSize === "100" && amount === "360") {
+        $(this).show();
+      }
     });
   });
 }
